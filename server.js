@@ -1,6 +1,6 @@
 const express = require('express');
 const User = require('./models/userModel');
-const Job = require('./models/jobModel');
+const Job = require('./models/jobDataModel');
 const cors = require('cors');
 
 const app = express();
