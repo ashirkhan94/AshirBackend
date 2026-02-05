@@ -36,7 +36,21 @@ app.post('/api/user', (req, res) => {
     const newUser = req.body;
     res.json({ message: 'User created successfully', user: newUser });
 })
-
+// Get all users
+app.get('/getAllusers', async (req, res) => {
+    try {
+        const users = await User.find(); // fetch all users
+        res.status(200).json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
 
 app.post('/addusers', async (req, res) => {
     try {
