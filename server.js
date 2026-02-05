@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('./models/userModel');
+const Job = require('./models/jobModel');
 const cors = require('cors');
 
 const app = express();
@@ -36,6 +37,28 @@ app.post('/api/user', (req, res) => {
     const newUser = req.body;
     res.json({ message: 'User created successfully', user: newUser });
 })
+
+app.post('/jobs', async (req, res) => {
+    try {
+        const { title, description, userId } = req.body;
+
+        const job = await Job.create({
+            title,
+            description,
+            userId // reference to User._id
+        });
+
+        res.status(201).json({
+            success: true,
+            job
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
 // Get all users
 app.get('/getAllusers', async (req, res) => {
     try {
