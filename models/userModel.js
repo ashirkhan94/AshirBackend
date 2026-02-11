@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        default: ''
+        unique: true,
+        index: true
     },
     jobTitle: {
         type: String,
@@ -20,7 +21,8 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        default: ''
+        unique: true,
+        index: true
     }
 }, { timestamps: true });
 
