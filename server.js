@@ -65,12 +65,38 @@ app.get('/api/getAllusers', async (req, res) => {
 //add new user
 app.post('/api/addusers', async (req, res) => {
     try {
+        const { name, email, jobTitle, phoneNumber } = req.body;
+
+        // 🔍 Check if email or phone already exists
+        const existingUser = await User.findOne({
+            $or: [
+                { email: email },
+                { phoneNumber: phoneNumber }
+            ]
+        });
+
+        if (existingUser) {
+            // 🔴 Specific error reason
+            if (existingUser.email === email) {
+                return res.status(400).json({
+                    error: true,
+                    reason: "Email already exists"
+                });
+            }
+
+            if (existingUser.phoneNumber === phoneNumber) {
+                return res.status(400).json({
+                    error: true,
+                    reason: "Phone number already exists"
+                });
+            }
+        }
         const newUser = new User({
             userID: Date.now().toString(),
-            name: req.body.name,
-            email: req.body.email,
-            jobTitle: req.body.jobTitle,
-            phoneNumber: req.body.phoneNumber
+            name: name,
+            email: email,
+            jobTitle: jobTitle,
+            phoneNumber: phoneNumber
         });
 
         await newUser.save();
