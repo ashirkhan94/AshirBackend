@@ -27,6 +27,27 @@ app.post('/jobs', async (req, res) => {
     try {
         const { title, description, userId } = req.body;
 
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'userId is required'
+            });
+        }
+
+        const existingJob = await Job.findOne({ userId });
+
+        if (existingJob) {
+            existingJob.title = title;
+            existingJob.description = description;
+            await existingJob.save();
+
+            return res.status(200).json({
+                success: true,
+                message: 'Job updated successfully',
+                job: existingJob
+            });
+        }
+
         const job = await Job.create({
             title,
             description,
@@ -35,6 +56,7 @@ app.post('/jobs', async (req, res) => {
 
         res.status(201).json({
             success: true,
+            message: 'Job created successfully',
             job
         });
     } catch (error) {
